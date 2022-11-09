@@ -1,31 +1,4 @@
-a = input('Введите свой рост, вес и возраст через запятую: ').replace(' ', '').split(sep=',')
-
-try:
-    float(a[0])
-    float(a[1])
-    float(a[2])
-except ValueError:
-    print('Введены текстовые значения. Введите цифровые значения.')
-else:
-    if len(a) > 3:
-        print('Введите только три числа')
-    elif len(a) < 3:
-        print('Введите все необходимые числа')
-    else:
-        height, weight, age = float(a[0]), float(a[1]), float(a[2])
-
-
-if height <= 0 or weight <= 0 or age <= 0:
-    print('Введены отрицательные значения')
-
-if height > 5:
-    height = height / 100
-
-
-def imt_calc(x, y):
-    return round((y / (x ** 2)), 2)
-
-
+# Словарь с характеристиками по ИМТ
 imt_desc_dict = {
     1: 'Выраженный дефицит массы тела',
     2: 'Недостаточная (дефицит) масса тела',
@@ -37,6 +10,7 @@ imt_desc_dict = {
 }
 
 
+# Словарь с характеристиками по возрасту
 age_desc_dict = {
     1: 'Младенец',
     2: 'Ребенок',
@@ -46,6 +20,12 @@ age_desc_dict = {
 }
 
 
+# Функция для расчёта ИМТ
+def imt_calc(height, weight):
+    return round((weight / (height ** 2)), 2)
+
+
+# Функция для сопоставления ИМТ и характеристики для него
 def imt_desc(x):
     i = 0
     if x <= 16:
@@ -60,11 +40,12 @@ def imt_desc(x):
         i = 5
     elif 35 < x <= 40:
         i = 6
-    elif x > 40:
+    else:
         i = 7
     return imt_desc_dict[i]
 
 
+# Функция для сопоставления возраста и характеристики для него
 def age_category(x):
     i = 0
     if x <= 1:
@@ -75,14 +56,42 @@ def age_category(x):
         i = 3
     elif 18 < x <= 60:
         i = 4
-    elif x > 60:
+    else:
         i = 5
     return age_desc_dict[i]
 
 
-print(
-    'Ваш ИМТ - ', imt_calc(height, weight), ' (', imt_desc(imt_calc(height, weight)), ')', '\n',
-    'Ваша возрастная категория - ', age_category(age), sep=''
-)
+a = input('Введите свой рост, вес и возраст через запятую: ').replace(' ', '').split(sep=',')
+
+
+# Проверка на количество введёных чисел
+if len(a) > 3:
+    print('Введите только три числа.')
+elif len(a) < 3:
+    print('Введите все необходимые числа.')
+else:
+    # Проверка на ввод текста
+    try:
+        float(a[0])
+        float(a[1])
+        float(a[2])
+    except ValueError:
+        print('Введены некорректные значения. Введите цифровые значения.')
+    else:
+        height, weight, age = float(a[0]), float(a[1]), float(a[2])
+
+    # Проверка на нулевые значения
+    if height <= 0 or weight <= 0 or age <= 0:
+            print('Введены отрицательные значения.')
+    # Проверка и изменение единиц измерения для роста
+    else:
+        if height > 5:
+            height = height / 100
+
+        # Итоговый вывод
+        print(
+        'Ваш ИМТ - ', imt_calc(height, weight), ' (', imt_desc(imt_calc(height, weight)), ')', '\n',
+        'Ваша возрастная категория - ', age_category(age), sep=''
+        )
 
 
