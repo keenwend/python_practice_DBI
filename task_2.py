@@ -47,12 +47,6 @@ day_of_week_dict = {
 }
 
 
-# Если год високосный перезаписываем словарь с месяцами и днями в месяцах
-def leap_year_fixing(year):
-    if leap_year_check(year):
-        day_month_dict[2] = 'февраль 29'
-
-
 # True - високосный год; False - оьычный год
 def leap_year_check(year):
     if year % 4 == 0 and year % 100 != 0:
@@ -61,6 +55,12 @@ def leap_year_check(year):
         return True
     else:
         return False
+
+
+# Если год високосный перезаписываем словарь с месяцами и днями в месяцах
+def leap_year_fixing(year):
+    if leap_year_check(year):
+        day_month_dict[2] = 'февраль 29'
 
 
 # Возвращает номер квартала в году
@@ -126,56 +126,43 @@ while len(a) != 3:
 
 
 # Проверка на корректность даты
-if int(a[2]) < 1970:
+while int(a[2]) < 1970:
     a = input('Некорректный ввод. Значение раннее 01.01.1970. Введите дату позднее 01.01.1970 в формате dd.mm.yyyy: ')\
         .replace(' ', '').split(sep='.')
 else:
-    if int(a[1]) < 1 or int(a[1]) > 12:
+    while int(a[1]) < 1 or int(a[1]) > 12:
         a = input('Некорректный ввод. Некоректное значение месяца. Введите дату в формате dd.mm.yyyy: '). \
             replace(' ', '').split(sep='.')
     else:
-        for i in range(1, 13):
-            if int(a[0]) > int(day_month_dict[i].split(sep=' ')[1]):
-                a = input('Некорректный ввод. Некоректное значение дня. Введите дату в формате dd.mm.yyyy: '). \
-                    replace(' ', '').split(sep='.')
+        while int(a[0]) > int(day_month_dict[int(a[1])].split(sep=' ')[1]):
+            a = input('Некорректный ввод. Некоректное значение дня. Введите дату в формате dd.mm.yyyy: '). \
+                replace(' ', '').split(sep='.')
+        else:
+            d, m, y = int(a[0]), int(a[1]), int(a[2])
+
+            leap_year_fixing(y)
+
+            if len(str(d)) == 1:
+                dd = '0' + str(d)
             else:
-                d, m, y = int(a[0]), int(a[1]), int(a[2])
+                dd = d
 
+            if len(str(m)) == 1:
+                mm = '0' + str(m)
+            else:
+                mm = m
 
-
-leap_year_fixing(y)
-# try:
-#     int(a[0])
-#     int(a[1])
-#     int(a[2])
-# except ValueError:
-#     a = input('Некорректный ввод: не числовые данные. Введите дату в формате dd.mm.yyyy: ').\
-#         replace(' ', '').split(sep='.')
-
-
-if len(str(d)) == 1:
-    dd = '0' + str(d)
-else:
-    dd = d
-
-
-if len(str(m)) == 1:
-    mm = '0' + str(m)
-else:
-    mm = m
-
-
-if leap_year_check(y):
-    leap_year_desc = 'Високосный год'
-else:
-    leap_year_desc = 'Обычный год'
+            if leap_year_check(y):
+                leap_year_desc = 'Високосный год'
+            else:
+                leap_year_desc = 'Обычный год'
 
 
 # Итоговый вывод
-print(dd, '.', mm, '.', y, ' - ', leap_year_desc, sep='')
-print(y, ' - ', year_animal(y), sep='')
-print(quarter_number(m), '-й квартал', sep='')
-print(mm, ' - ', day_month_dict[m].split(sep=' ')[0], sep='')
-print(dd, '-й день', sep='')
-print(days_count_since_year_beginning(d, m), 'дней прошло с начала года')
-print(day_of_week(days_count_since_period_beginning(d, m, y)))
+            print(dd, '.', mm, '.', y, ' - ', leap_year_desc, sep='')
+            print(y, ' - ', year_animal(y), sep='')
+            print(quarter_number(m), '-й квартал', sep='')
+            print(mm, ' - ', day_month_dict[m].split(sep=' ')[0], sep='')
+            print(dd, '-й день', sep='')
+            print(days_count_since_year_beginning(d, m), 'дней прошло с начала года')
+            print(day_of_week(days_count_since_period_beginning(d, m, y)))
